@@ -23,34 +23,34 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     assert_equal 422, response.status
     assert_equal({'capacity' => ['is not included in the list'] }, JSON.parse(body))
 
-    # post '/responders', responder: { type: 'Fire', name: 'F-201', capacity: 1 }
-    # assert_equal 201, response.status
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-201', capacity: 1 }
+    assert_equal 201, response.status
 
-    # post '/responders', responder: { type: 'Fire', name: 'F-202', capacity: 2 }
-    # assert_equal 201, response.status
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-202', capacity: 2 }
+    assert_equal 201, response.status
 
-    # post '/responders', responder: { type: 'Fire', name: 'F-203', capacity: 3 }
-    # assert_equal 201, response.status
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-203', capacity: 3 }
+    assert_equal 201, response.status
 
-    # post '/responders', responder: { type: 'Fire', name: 'F-204', capacity: 4 }
-    # assert_equal 201, response.status
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-204', capacity: 4 }
+    assert_equal 201, response.status
 
-    # post '/responders', responder: { type: 'Fire', name: 'F-205', capacity: 5 }
-    # assert_equal 201, response.status
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-205', capacity: 5 }
+    assert_equal 201, response.status
 
-    # post '/responders', responder: { type: 'Fire', name: 'F-206', capacity: 6 }
-    # assert_equal 422, response.status
-    # assert_equal({ 'message' => { 'capacity' => ['is not included in the list'] } }, JSON.parse(body))
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-206', capacity: 6 }
+    assert_equal 422, response.status
+    assert_equal({ 'capacity' => ['is not included in the list'] }, JSON.parse(body))
   end
 
-  # test 'POST /responders/ name attribute must be unique' do
-  #   post '/responders', responder: { type: 'Fire', name: 'F-not-unique', capacity: 1 }
-  #   assert_equal 201, response.status
+  test 'POST /api/v1/responders/ name attribute must be unique' do
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-not-unique', capacity: 1 }
+    assert_equal 201, response.status
 
-  #   post '/responders', responder: { type: 'Fire', name: 'F-not-unique', capacity: 1 }
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => { 'name' => ['has already been taken'] } }, JSON.parse(body))
-  # end
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-not-unique', capacity: 1 }
+    assert_equal 422, response.status
+    assert_equal({ 'name' => ['has already been taken'] }, JSON.parse(body))
+  end
 
   # test 'POST /responders/ cannot set emergency_code' do
   #   post '/responders', responder: { emergency_code: 'E-1001', type: 'Fire', name: 'F-SET-EMG-ID', capacity: 1 }

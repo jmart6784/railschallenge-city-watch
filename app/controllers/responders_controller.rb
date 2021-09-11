@@ -24,7 +24,7 @@ class RespondersController < ApplicationController
   end
 
   def responder
-    @responder ||= Responder.find(params[:id])
+    @responder ||= Responder.find_by(name: params[:name])
   end
 
   def responder_params
