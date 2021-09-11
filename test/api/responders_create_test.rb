@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'json'
 
 class RespondersCreateTest < ActionDispatch::IntegrationTest
   def setup
@@ -14,17 +15,7 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     body = JSON.parse(response.body)
 
     assert_equal 201, response.status
-    assert_equal(
-      {
-        'id' => 4,
-        'emergency_code' => nil,
-        'type' => 'Fire',
-        'name' => 'F-NEW',
-        'capacity' => 1,
-        'on_duty' => false
-        },
-      body
-    )
+    assert_equal(JSON.parse(Responder.find(4).to_json), body)
   end
 
   # test 'POST /responders/ capacity can be a number between 1..5' do
