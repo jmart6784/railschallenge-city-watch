@@ -11,7 +11,7 @@ class RespondersController < ApplicationController
     if responder.save
       render json: responder, status: 201
     else
-      render json: responder.errors
+      render json: responder.errors, status: 422
     end
   end
 
