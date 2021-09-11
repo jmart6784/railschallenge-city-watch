@@ -6,12 +6,16 @@ class RespondersController < ApplicationController
   end
 
   def create
-    responder = Responder.new(responder_params)
-
-    if responder.save
-      render json: responder, status: 201
+    if responder_params[:emergency_code]
+      render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
     else
-      render json: responder.errors, status: 422
+      responder = Responder.new(responder_params)
+
+      if responder.save
+        render json: responder, status: 201
+      else
+        render json: responder.errors, status: 422
+      end
     end
   end
 
@@ -23,11 +27,13 @@ class RespondersController < ApplicationController
     end
   end
 
+  private
+
   def responder
     @responder ||= Responder.find_by(name: params[:name])
   end
 
   def responder_params
-    params.require(:responder).permit(:emergency_code, :type, :name, :capacity, :on_duty)
+    params.require(:responder).permit(:emergency_code,:type, :name, :capacity, :on_duty)
   end
 end

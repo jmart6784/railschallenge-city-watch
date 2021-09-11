@@ -5,9 +5,9 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
   def setup
     super
 
-    post '/api/v1/responders/', responder: { emergency_code: 100, type: 'Fire', name: 'F-100', capacity: 1, on_duty: true }
-    post '/api/v1/responders/', responder: { emergency_code: 101, type: 'Police', name: 'P-100', capacity: 2, on_duty: false }
-    post '/api/v1/responders/', responder: { emergency_code: 102, type: 'Medical', name: 'M-100', capacity: 3, on_duty: true }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Fire', name: 'F-100', capacity: 1, on_duty: true }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Police', name: 'P-100', capacity: 2, on_duty: false }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Medical', name: 'M-100', capacity: 3, on_duty: true }
   end
 
   test 'POST /api/v1/responders/ simple creation' do
@@ -52,12 +52,12 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'name' => ['has already been taken'] }, JSON.parse(body))
   end
 
-  # test 'POST /responders/ cannot set emergency_code' do
-  #   post '/responders', responder: { emergency_code: 'E-1001', type: 'Fire', name: 'F-SET-EMG-ID', capacity: 1 }
+  test 'POST /api/v1/responders/ cannot set emergency_code' do
+    post '/api/v1/responders/', responder: { emergency_code: 'E-1001', type: 'Fire', name: 'F-SET-EMG-ID', capacity: 1 }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => 'found unpermitted parameter: emergency_code' }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'message' => 'found unpermitted parameter: emergency_code' }, JSON.parse(body))
+  end
 
   # test 'POST /responders/ cannot set id' do
   #   post '/responders', responder: { id: 1, type: 'Fire', name: 'F-SET-ID', capacity: 1 }
