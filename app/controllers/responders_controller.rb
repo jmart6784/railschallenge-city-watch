@@ -9,7 +9,7 @@ class RespondersController < ApplicationController
     responder = Responder.new(responder_params)
 
     if responder.save
-      render json: responder
+      render json: responder, status: 201
     else
       render json: responder.errors
     end

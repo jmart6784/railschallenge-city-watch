@@ -4,26 +4,25 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
   def setup
     super
 
-    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-100', capacity: 1 }
-    post '/api/v1/responders/', responder: { type: 'Police', name: 'P-100', capacity: 2 }
-    post '/api/v1/responders/', responder: { type: 'Medical', name: 'M-100', capacity: 3 }
+    post '/api/v1/responders/', responder: { emergency_code: 100, type: 'Fire', name: 'F-100', capacity: 1, on_duty: true }
+    post '/api/v1/responders/', responder: { emergency_code: 101, type: 'Police', name: 'P-100', capacity: 2, on_duty: false }
+    post '/api/v1/responders/', responder: { emergency_code: 102, type: 'Medical', name: 'M-100', capacity: 3, on_duty: true }
   end
 
   test 'POST /api/v1/responders/ simple creation' do
-    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-NEW', capacity: 1 }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Fire', name: 'F-NEW', capacity: 1, on_duty: false }
     body = JSON.parse(response.body)
 
     assert_equal 201, response.status
     assert_equal(
       {
-        'responder' => {
-          'emergency_code' => nil,
-          'type' => 'Fire',
-          'name' => 'F-NEW',
-          'capacity' => 1,
-          'on_duty' => false
-        }
-      },
+        'id' => 4,
+        'emergency_code' => nil,
+        'type' => 'Fire',
+        'name' => 'F-NEW',
+        'capacity' => 1,
+        'on_duty' => false
+        },
       body
     )
   end
