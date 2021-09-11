@@ -15,6 +15,14 @@ class RespondersController < ApplicationController
     end
   end
 
+  def show
+    if responder
+      render json: responder
+    else
+      render json: responder.errors
+    end
+  end
+
   def responder
     @responder ||= Responder.find(params[:id])
   end
