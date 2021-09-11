@@ -9,5 +9,8 @@ group :development, :test do
   gem 'rubocop', '0.30.0'
   gem 'minitest-rails', '~> 2.1.1'
   gem 'database_cleaner', '1.4.1'
+end
+
+group :development do
   gem 'web-console', '~> 2.0'
 end
