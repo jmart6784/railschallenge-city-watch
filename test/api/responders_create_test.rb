@@ -87,19 +87,17 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'name' => ['can\'t be blank'] }, JSON.parse(body))
   end
 
-  # test 'POST /responders/ lack of capacity returns an error' do
-  #   post '/responders', responder: { type: 'Fire', name: 'F-101' }
+  test 'POST /api/v1/responders/ lack of capacity returns an error' do
+    post '/api/v1/responders', responder: { type: 'Fire', name: 'F-101' }
 
-  #   assert_equal 422, response.status
-  #   assert_equal(
-  #     {
-  #       'message' => {
-  #         'capacity' => ['can\'t be blank', 'is not included in the list']
-  #       }
-  #     },
-  #     JSON.parse(body)
-  #   )
-  # end
+    assert_equal 422, response.status
+    assert_equal(
+      {
+        'capacity' => ['is not included in the list', 'can\'t be blank']
+      },
+      JSON.parse(body)
+    )
+  end
 
   # test 'POST /responders/ lack of multiple required fields returns an error' do
   #   post '/responders', responder: { type: 'Fire' }

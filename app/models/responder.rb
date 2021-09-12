@@ -6,6 +6,7 @@ class Responder < ActiveRecord::Base
     less_than_or_equal_to: 5, 
     message: 'is not included in the list'
 
+  validates :capacity, presence: true
   validates_uniqueness_of :name
   validates :name, presence: true
   validates :type, presence: true
