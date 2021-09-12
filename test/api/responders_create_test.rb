@@ -5,13 +5,13 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
   def setup
     super
 
-    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Fire', name: 'F-100', capacity: 1, on_duty: true }
-    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Police', name: 'P-100', capacity: 2, on_duty: false }
-    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Medical', name: 'M-100', capacity: 3, on_duty: true }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Fire', name: 'F-100', capacity: 1 }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Police', name: 'P-100', capacity: 2 }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Medical', name: 'M-100', capacity: 3 }
   end
 
   test 'POST /api/v1/responders/ simple creation' do
-    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Fire', name: 'F-NEW', capacity: 1, on_duty: false }
+    post '/api/v1/responders/', responder: { emergency_code: nil, type: 'Fire', name: 'F-NEW', capacity: 1 }
     body = JSON.parse(response.body)
 
     assert_equal 201, response.status
@@ -66,12 +66,12 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'message' => 'found unpermitted parameter: id' }, JSON.parse(body))
   end
 
-  # test 'POST /responders/ cannot set on_duty' do
-  #   post '/responders', responder: { on_duty: true, type: 'Fire', name: 'F-SET-ON-DUTY', capacity: 1 }
+  test 'POST /api/v1/responders/ cannot set on_duty' do
+    post '/api/v1/responders', responder: { on_duty: true, type: 'Fire', name: 'F-SET-ON-DUTY', capacity: 1 }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => 'found unpermitted parameter: on_duty' }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'message' => 'found unpermitted parameter: on_duty' }, JSON.parse(body))
+  end
 
   # test 'POST /responders/ lack of type returns an error' do
   #   post '/responders', responder: { name: 'F-101', capacity: 1 }

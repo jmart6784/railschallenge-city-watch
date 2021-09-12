@@ -10,6 +10,8 @@ class RespondersController < ApplicationController
       render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
     elsif responder_params[:id]
       render json: { :message => 'found unpermitted parameter: id' }, status: 422
+    elsif responder_params[:on_duty]
+      render json: { :message => 'found unpermitted parameter: on_duty' }, status: 422
     else
       responder = Responder.new(responder_params)
 
