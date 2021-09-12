@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'json'
 
 class RespondersIndexTest < ActionDispatch::IntegrationTest
   def setup
@@ -9,6 +10,12 @@ class RespondersIndexTest < ActionDispatch::IntegrationTest
     post '/api/v1/responders/', responder: { type: 'Medical', name: 'M-100', capacity: 3 }
   end
 
+  test 'GET /api/v1/responders/ should return all responders when some responders exist' do
+    get '/api/v1/responders/'
+    assert_equal 200, response.status
+    assert_equal(JSON.parse(Responder.all.to_json), JSON.parse(body))
+  end
+
   test 'GET /api/v1/responders/ should be empty when no responders exist' do
     Responder.destroy_all
 
@@ -17,37 +24,4 @@ class RespondersIndexTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
     assert_equal [], JSON.parse(body)
   end
-
-  # test 'GET /responders/ should return all responders when some responders exist' do
-  #   get '/responders/'
-  #   assert_equal 200, response.status
-  #   assert_equal(
-  #     {
-  #       'responders' => [
-  #         {
-  #           'emergency_code' => nil,
-  #           'type' => 'Fire',
-  #           'name' => 'F-100',
-  #           'capacity' => 1,
-  #           'on_duty' => false
-  #         },
-  #         {
-  #           'emergency_code' => nil,
-  #           'type' => 'Police',
-  #           'name' => 'P-100',
-  #           'capacity' => 2,
-  #           'on_duty' => false
-  #         },
-  #         {
-  #           'emergency_code' => nil,
-  #           'type' => 'Medical',
-  #           'name' => 'M-100',
-  #           'capacity' => 3,
-  #           'on_duty' => false
-  #         }
-  #       ]
-  #     },
-  #     JSON.parse(body)
-  #   )
-  # end
 end
