@@ -73,12 +73,12 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'message' => 'found unpermitted parameter: on_duty' }, JSON.parse(body))
   end
 
-  # test 'POST /responders/ lack of type returns an error' do
-  #   post '/responders', responder: { name: 'F-101', capacity: 1 }
+  test 'POST /api/v1/responders/ lack of type returns an error' do
+    post '/api/v1/responders', responder: { name: 'F-101', capacity: 1 }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => { 'type' => ['can\'t be blank'] } }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'type' => ['can\'t be blank'] }, JSON.parse(body))
+  end
 
   # test 'POST /responders/ lack of name returns an error' do
   #   post '/responders', responder: { type: 'Fire', capacity: 1 }
