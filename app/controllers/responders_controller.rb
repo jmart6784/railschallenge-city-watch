@@ -32,8 +32,12 @@ class RespondersController < ApplicationController
   end
 
   def update
-    responder&.update(responder_params)
-    render json: {message: 'Responder edited!'}
+    if responder_params[:emergency_code]
+      render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+    else
+      responder&.update(responder_params)
+      render json: {message: 'Responder edited!'}
+    end
   end
 
   private
