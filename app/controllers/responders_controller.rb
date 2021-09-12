@@ -5,6 +5,14 @@ class RespondersController < ApplicationController
     render json: responders
   end
 
+  def show
+    if responder
+      render json: responder
+    else
+      render json: { :message => "responder doesn't exist" }, status: 404
+    end
+  end
+
   def create
     if responder_params[:emergency_code]
       render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
@@ -23,12 +31,9 @@ class RespondersController < ApplicationController
     end
   end
 
-  def show
-    if responder
-      render json: responder
-    else
-      render json: { :message => "responder doesn't exist" }, status: 404
-    end
+  def update
+    responder&.update(responder_params)
+    render json: {message: 'Responder edited!'}
   end
 
   private

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       scope '/responders' do
         get '/' => 'responders#index'
         post '/' => 'responders#create'
+        
         scope '/:name' do
           get '/' => 'responders#show'
           put '/' => 'responders#update'
