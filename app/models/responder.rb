@@ -7,5 +7,6 @@ class Responder < ActiveRecord::Base
     message: 'is not included in the list'
 
   validates_uniqueness_of :name
+  validates :name, presence: true
   validates :type, presence: true
 end
