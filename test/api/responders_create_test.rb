@@ -99,18 +99,16 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     )
   end
 
-  # test 'POST /responders/ lack of multiple required fields returns an error' do
-  #   post '/responders', responder: { type: 'Fire' }
+  test 'POST /api/v1/responders/ lack of multiple required fields returns an error' do
+    post '/api/v1/responders', responder: { type: 'Fire' }
 
-  #   assert_equal 422, response.status
-  #   assert_equal(
-  #     {
-  #       'message' => {
-  #         'name' => ['can\'t be blank'],
-  #         'capacity' => ['can\'t be blank', 'is not included in the list']
-  #       }
-  #     },
-  #     JSON.parse(body)
-  #   )
-  # end
+    assert_equal 422, response.status
+    assert_equal(
+      {
+        'capacity' => ['is not included in the list', 'can\'t be blank'],
+        'name' => ['can\'t be blank']
+      },
+      JSON.parse(body)
+    )
+  end
 end
