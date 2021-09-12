@@ -14,9 +14,9 @@ class RespondersShowTest < ActionDispatch::IntegrationTest
     assert_equal(JSON.parse(Responder.first.to_json), JSON.parse(body))
   end
 
-  # test 'GET /responders/:name 404 response' do
-  #   get '/responders/non-existent-responder-name'
+  test 'GET /api/v1/responders/:name 404 response' do
+    get '/api/v1/responders/non-existent-responder-name'
 
-  #   assert_equal 404, response.status
-  # end
+    assert_equal 404, response.status
+  end
 end

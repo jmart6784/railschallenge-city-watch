@@ -27,7 +27,7 @@ class RespondersController < ApplicationController
     if responder
       render json: responder
     else
-      render json: responder.errors
+      render json: { :message => "responder doesn't exist" }, status: 404
     end
   end
 
