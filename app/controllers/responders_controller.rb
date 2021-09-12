@@ -8,6 +8,8 @@ class RespondersController < ApplicationController
   def create
     if responder_params[:emergency_code]
       render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+    elsif responder_params[:id]
+      render json: { :message => 'found unpermitted parameter: id' }, status: 422
     else
       responder = Responder.new(responder_params)
 
@@ -34,6 +36,6 @@ class RespondersController < ApplicationController
   end
 
   def responder_params
-    params.require(:responder).permit(:emergency_code,:type, :name, :capacity, :on_duty)
+    params.require(:responder).permit(:id, :emergency_code, :type, :name, :capacity, :on_duty)
   end
 end

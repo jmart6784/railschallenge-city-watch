@@ -59,12 +59,12 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'message' => 'found unpermitted parameter: emergency_code' }, JSON.parse(body))
   end
 
-  # test 'POST /responders/ cannot set id' do
-  #   post '/responders', responder: { id: 1, type: 'Fire', name: 'F-SET-ID', capacity: 1 }
+  test 'POST /api/v1/responders/ cannot set id' do
+    post '/api/v1/responders', responder: { id: 1, type: 'Fire', name: 'F-SET-ID', capacity: 1 }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => 'found unpermitted parameter: id' }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'message' => 'found unpermitted parameter: id' }, JSON.parse(body))
+  end
 
   # test 'POST /responders/ cannot set on_duty' do
   #   post '/responders', responder: { on_duty: true, type: 'Fire', name: 'F-SET-ON-DUTY', capacity: 1 }
