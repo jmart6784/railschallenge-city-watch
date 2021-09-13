@@ -10,6 +10,7 @@ Rails.application.routes.draw do
           get '/' => 'responders#show'
           put '/' => 'responders#update'
           get '/edit' => 'responders#edit'
+          delete '/' => 'responders#destroy'
         end
       end
 

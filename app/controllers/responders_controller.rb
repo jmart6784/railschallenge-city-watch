@@ -44,6 +44,10 @@ class RespondersController < ApplicationController
     render json: { :message => 'page not found' }, status: 404
   end
 
+  def destroy
+    render json: { :message => 'page not found' }, status: 404
+  end
+
   private
 
   def forbidden_param?(action)
