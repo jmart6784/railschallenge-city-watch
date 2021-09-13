@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         scope '/:code' do
           get '/' => 'emergencies#show'
           put '/' => 'emergencies#update'
+          get '/edit' => 'emergencies#edit'
         end
       end
     end

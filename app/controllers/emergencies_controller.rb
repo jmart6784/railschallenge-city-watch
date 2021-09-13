@@ -34,6 +34,10 @@ class EmergenciesController < ApplicationController
     end
   end
 
+  def edit
+    render json: { :message => 'page not found' }, status: 404
+  end
+
   def update
     if forbidden_param?("update")
       unpermitted_param_response("update")
