@@ -89,12 +89,17 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
     )
   end
 
-  # test 'POST /api/v1/emergencies/ lack of medical_severity returns an error' do
-  #   post '/api/v1/emergencies', emergency: { code: 'E-55555555', fire_severity: 2, police_severity: 3 }
+  test 'POST /api/v1/emergencies/ lack of medical_severity returns an error' do
+    post '/api/v1/emergencies', emergency: { code: 'E-55555555', fire_severity: 2, police_severity: 3 }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => { 'medical_severity' => ['can\'t be blank', 'is not a number'] } }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal(
+      { 
+        "medical_severity" => ["can't be blank", "must be greater than or equal to 0"]
+      }, 
+      JSON.parse(body)
+    )
+  end
 
   # test 'POST /api/v1/emergencies/ lack of multiple required fields returns an error' do
   #   post '/api/v1/emergencies', emergency: { fire_severity: 1 }
