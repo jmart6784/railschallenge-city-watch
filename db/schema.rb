@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210911210018) do
+ActiveRecord::Schema.define(version: 20210913055514) do
 
   create_table "emergencies", force: :cascade do |t|
     t.string   "code"
