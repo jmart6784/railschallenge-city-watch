@@ -28,12 +28,12 @@ class EmergenciesUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 4, json_response['medical_severity']
   end
 
-  # test 'PATCH /api/v1/emergencies/:code can change resolved_at' do
-  #   put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now }
+  test 'PATCH /api/v1/emergencies/:code can change resolved_at' do
+    put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now }
 
-  #   json_response = JSON.parse(body)
-  #   assert_not_nil json_response['emergency']['resolved_at']
-  # end
+    json_response = JSON.parse(body)
+    assert_not_nil json_response['resolved_at']
+  end
 
   # test 'PATCH /api/v1/emergencies/:code cannot change code (it is fixed once created)' do
   #   put '/api/v1/emergencies/E-00000001', emergency: { code: 'E-55555555' }
