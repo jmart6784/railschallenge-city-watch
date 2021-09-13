@@ -9,6 +9,7 @@ Rails.application.routes.draw do
         scope '/:name' do
           get '/' => 'responders#show'
           put '/' => 'responders#update'
+          get '/edit' => 'responders#edit'
         end
       end
 
