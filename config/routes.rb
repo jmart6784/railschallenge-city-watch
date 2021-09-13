@@ -20,6 +20,7 @@ Rails.application.routes.draw do
           get '/' => 'emergencies#show'
           put '/' => 'emergencies#update'
           get '/edit' => 'emergencies#edit'
+          delete '/' => 'emergencies#destroy'
         end
       end
     end
