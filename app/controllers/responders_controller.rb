@@ -32,15 +32,41 @@ class RespondersController < ApplicationController
   end
 
   def update
-    if responder_params[:emergency_code]
-      render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+    if forbidden_param?("update")
+      unpermitted_param_response("update")
     else
       responder&.update(responder_params)
-      render json: {message: 'Responder edited!'}
+      return render json: {message: 'Responder edited!'}
     end
   end
 
   private
+
+  def forbidden_param?(action)
+    if action === "update"
+      true if (
+        responder_params[:emergency_code] || 
+        responder_params[:id] || 
+        responder_params[:type]
+      )
+    elsif false
+      
+    end
+  end
+
+  def unpermitted_param_response(action)
+    if action === "create"
+
+    elsif action === "update"
+      if responder_params[:emergency_code]
+        render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+      elsif responder_params[:id]
+        render json: { :message => 'found unpermitted parameter: id' }, status: 422
+      elsif responder_params[:type]
+        render json: { :message => 'found unpermitted parameter: type' }, status: 422
+      end      
+    end
+  end
 
   def responder
     @responder ||= Responder.find_by(name: params[:name])
