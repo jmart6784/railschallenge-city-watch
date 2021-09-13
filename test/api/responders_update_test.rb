@@ -38,10 +38,10 @@ class RespondersUpdateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'message' => 'found unpermitted parameter: name' }, JSON.parse(body))
   end
 
-  # test 'PATCH /api/v1/responders/:name cannot change capacity' do
-  #   put '/api/v1/responders/F-100', responder: { capacity: 7 }
+  test 'PATCH /api/v1/responders/:name cannot change capacity' do
+    put '/api/v1/responders/F-100', responder: { capacity: 7 }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => 'found unpermitted parameter: capacity' }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'message' => 'found unpermitted parameter: capacity' }, JSON.parse(body))
+  end
 end

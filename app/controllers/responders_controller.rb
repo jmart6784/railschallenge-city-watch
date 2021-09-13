@@ -50,7 +50,8 @@ class RespondersController < ApplicationController
         responder_params[:emergency_code] || 
         responder_params[:id] || 
         responder_params[:type] ||
-        responder_params[:name]
+        responder_params[:name] || 
+        responder_params[:capacity]
       )
     end
   end
@@ -73,6 +74,8 @@ class RespondersController < ApplicationController
         render json: { :message => 'found unpermitted parameter: type' }, status: 422
       elsif responder_params[:name]
         render json: { :message => 'found unpermitted parameter: name' }, status: 422
+      elsif responder_params[:capacity]
+        render json: { :message => 'found unpermitted parameter: capacity' }, status: 422
       end      
     end
   end
