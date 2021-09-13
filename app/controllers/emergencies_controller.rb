@@ -8,6 +8,14 @@ class EmergenciesController < ApplicationController
     render json: {emergencies: emergencies, full_response: [resolved, emergencies.count]}, status: 200
   end
 
+  def show
+    if emergency
+      render json: emergency
+    else
+      render json: { :message => "emergency doesn't exist" }, status: 404
+    end
+  end
+
   def create
     if forbidden_param?("create")
       unpermitted_param_response("create")
