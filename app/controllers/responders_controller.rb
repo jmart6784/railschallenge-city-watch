@@ -14,12 +14,8 @@ class RespondersController < ApplicationController
   end
 
   def create
-    if responder_params[:emergency_code]
-      render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
-    elsif responder_params[:id]
-      render json: { :message => 'found unpermitted parameter: id' }, status: 422
-    elsif responder_params[:on_duty]
-      render json: { :message => 'found unpermitted parameter: on_duty' }, status: 422
+    if forbidden_param?("create") || !responder_params[:emergency_code].nil?
+      unpermitted_param_response("create")
     else
       responder = Responder.new(responder_params)
 
@@ -49,14 +45,24 @@ class RespondersController < ApplicationController
         responder_params[:id] || 
         responder_params[:type]
       )
-    elsif false
-      
+    elsif action === "create"
+      true if (
+        responder_params[:emergency_code] || 
+        responder_params[:id] || 
+        responder_params[:on_duty]
+      )
     end
   end
 
   def unpermitted_param_response(action)
     if action === "create"
-
+      if responder_params[:emergency_code]
+        render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+      elsif responder_params[:id]
+        render json: { :message => 'found unpermitted parameter: id' }, status: 422
+      elsif responder_params[:on_duty]
+        render json: { :message => 'found unpermitted parameter: on_duty' }, status: 422
+      end   
     elsif action === "update"
       if responder_params[:emergency_code]
         render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
