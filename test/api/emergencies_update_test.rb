@@ -21,12 +21,12 @@ class EmergenciesUpdateTest < ActionDispatch::IntegrationTest
     assert_equal 6, json_response['police_severity']
   end
 
-  # test 'PATCH /api/v1/emergencies/:code can change medical_severity' do
-  #   put '/api/v1/emergencies/E-00000001', emergency: { medical_severity: 4 }
+  test 'PATCH /api/v1/emergencies/:code can change medical_severity' do
+    put '/api/v1/emergencies/E-00000001', emergency: { medical_severity: 4 }
 
-  #   json_response = JSON.parse(body)
-  #   assert_equal 4, json_response['emergency']['medical_severity']
-  # end
+    json_response = JSON.parse(body)
+    assert_equal 4, json_response['medical_severity']
+  end
 
   # test 'PATCH /api/v1/emergencies/:code can change resolved_at' do
   #   put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now }
