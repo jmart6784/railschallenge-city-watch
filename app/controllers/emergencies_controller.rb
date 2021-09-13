@@ -24,7 +24,8 @@ class EmergenciesController < ApplicationController
   def forbidden_param?(action)
     if action === "create"
       true if (
-        emergency_params[:id]
+        emergency_params[:id] || 
+        emergency_params[:resolved_at]
       )
     elsif action === "update"
       true if (
@@ -37,6 +38,8 @@ class EmergenciesController < ApplicationController
     if action === "create"
       if emergency_params[:id]
         render json: { :message => 'found unpermitted parameter: id' }, status: 422
+      elsif emergency_params[:resolved_at]
+        render json: { :message => 'found unpermitted parameter: resolved_at' }, status: 422
       end   
     elsif action === "update"
       if emergency_params[:id]
@@ -50,6 +53,6 @@ class EmergenciesController < ApplicationController
   end
 
   def emergency_params
-    params.require(:emergency).permit(:id, :code, :fire_severity, :police_severity, :medical_severity)
+    params.require(:emergency).permit(:id, :code, :fire_severity, :police_severity, :medical_severity, :resolved_at)
   end
 end
