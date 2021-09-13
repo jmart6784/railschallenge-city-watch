@@ -8,18 +8,18 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     assert_equal [], JSON.parse(body)
   end
 
-  # test 'GET /api/v1/emergencies/ should return all emergencies when some emergencies exist' do
-  #   post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 1, medical_severity: 2 }
+  test 'GET /api/v1/emergencies/ should return all emergencies when some emergencies exist' do
+    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 1, medical_severity: 2 }
 
-  #   get '/api/v1/emergencies/'
-  #   assert_equal 200, response.status
+    get '/api/v1/emergencies/'
+    assert_equal 200, response.status
 
-  #   json_response = JSON.parse(body)
-  #   assert_equal(json_response['emergencies'][0]['code'], 'E-00000001')
-  #   assert_equal(json_response['emergencies'][0]['fire_severity'], 0)
-  #   assert_equal(json_response['emergencies'][0]['police_severity'], 1)
-  #   assert_equal(json_response['emergencies'][0]['medical_severity'], 2)
-  # end
+    json_response = JSON.parse(body)
+    assert_equal(json_response[0]['code'], 'E-00000001')
+    assert_equal(json_response[0]['fire_severity'], 0)
+    assert_equal(json_response[0]['police_severity'], 1)
+    assert_equal(json_response[0]['medical_severity'], 2)
+  end
 
   # test 'GET /emergencies/ includes the full_responses counts' do
   #   setup_resolved_emergencies
