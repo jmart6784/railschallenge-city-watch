@@ -39,17 +39,18 @@ class RespondersController < ApplicationController
   private
 
   def forbidden_param?(action)
-    if action === "update"
-      true if (
-        responder_params[:emergency_code] || 
-        responder_params[:id] || 
-        responder_params[:type]
-      )
-    elsif action === "create"
+    if action === "create"
       true if (
         responder_params[:emergency_code] || 
         responder_params[:id] || 
         responder_params[:on_duty]
+      )
+    elsif action === "update"
+      true if (
+        responder_params[:emergency_code] || 
+        responder_params[:id] || 
+        responder_params[:type] ||
+        responder_params[:name]
       )
     end
   end
@@ -70,6 +71,8 @@ class RespondersController < ApplicationController
         render json: { :message => 'found unpermitted parameter: id' }, status: 422
       elsif responder_params[:type]
         render json: { :message => 'found unpermitted parameter: type' }, status: 422
+      elsif responder_params[:name]
+        render json: { :message => 'found unpermitted parameter: name' }, status: 422
       end      
     end
   end

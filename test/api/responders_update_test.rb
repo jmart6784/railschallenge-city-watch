@@ -24,22 +24,22 @@ class RespondersUpdateTest < ActionDispatch::IntegrationTest
     assert_equal({ 'message' => 'found unpermitted parameter: emergency_code' }, JSON.parse(body))
   end
 
-  # test 'PATCH /api/v1/responders/:name cannot change type' do
-  #   put '/api/v1/responders/F-100', responder: { type: 'Police' }
+  test 'PATCH /api/v1/responders/:name cannot change type' do
+    put '/api/v1/responders/F-100', responder: { type: 'Police' }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => 'found unpermitted parameter: type' }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'message' => 'found unpermitted parameter: type' }, JSON.parse(body))
+  end
 
-  # test 'PATCH /responders/:name cannot change name' do
-  #   patch '/responders/F-100', responder: { name: 'F-999' }
+  test 'PATCH /api/v1/responders/:name cannot change name' do
+    put '/api/v1/responders/F-100', responder: { name: 'F-999' }
 
-  #   assert_equal 422, response.status
-  #   assert_equal({ 'message' => 'found unpermitted parameter: name' }, JSON.parse(body))
-  # end
+    assert_equal 422, response.status
+    assert_equal({ 'message' => 'found unpermitted parameter: name' }, JSON.parse(body))
+  end
 
-  # test 'PATCH /responders/:name cannot change capacity' do
-  #   patch '/responders/F-100', responder: { capacity: 7 }
+  # test 'PATCH /api/v1/responders/:name cannot change capacity' do
+  #   put '/api/v1/responders/F-100', responder: { capacity: 7 }
 
   #   assert_equal 422, response.status
   #   assert_equal({ 'message' => 'found unpermitted parameter: capacity' }, JSON.parse(body))
