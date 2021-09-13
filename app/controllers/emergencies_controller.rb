@@ -38,7 +38,8 @@ class EmergenciesController < ApplicationController
       )
     elsif action === "update"
       true if (
-        emergency_params[:id]
+        emergency_params[:id] || 
+        emergency_params[:code]
       )
     end
   end
@@ -53,6 +54,8 @@ class EmergenciesController < ApplicationController
     elsif action === "update"
       if emergency_params[:id]
         render json: { :message => 'found unpermitted parameter: id' }, status: 422
+      elsif emergency_params[:code]
+        render json: { :message => 'found unpermitted parameter: code' }, status: 422
       end      
     end
   end

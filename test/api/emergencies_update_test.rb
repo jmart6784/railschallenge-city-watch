@@ -35,9 +35,9 @@ class EmergenciesUpdateTest < ActionDispatch::IntegrationTest
     assert_not_nil json_response['resolved_at']
   end
 
-  # test 'PATCH /api/v1/emergencies/:code cannot change code (it is fixed once created)' do
-  #   put '/api/v1/emergencies/E-00000001', emergency: { code: 'E-55555555' }
+  test 'PATCH /api/v1/emergencies/:code cannot change code (it is fixed once created)' do
+    put '/api/v1/emergencies/E-00000001', emergency: { code: 'E-55555555' }
 
-  #   assert_equal({ 'message' => 'found unpermitted parameter: code' }, JSON.parse(body))
-  # end
+    assert_equal({ 'message' => 'found unpermitted parameter: code' }, JSON.parse(body))
+  end
 end
