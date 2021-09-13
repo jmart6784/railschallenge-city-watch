@@ -21,10 +21,10 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     assert_equal(json_response[0]['medical_severity'], 2)
   end
 
-  # test 'GET /emergencies/ includes the full_responses counts' do
+  # test 'GET /api/v1/emergencies/ includes the full_responses counts' do
   #   setup_resolved_emergencies
 
-  #   get '/emergencies/'
+  #   get '/api/v1/emergencies/'
   #   assert_equal 200, response.status
 
   #   json_response = JSON.parse(body)

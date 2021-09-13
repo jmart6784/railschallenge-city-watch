@@ -19,6 +19,15 @@ class EmergenciesController < ApplicationController
     end
   end
 
+  def update
+    if forbidden_param?("update")
+      unpermitted_param_response("update")
+    else
+      emergency&.update(emergency_params)
+      return render json: emergency
+    end
+  end
+
   private
 
   def forbidden_param?(action)
@@ -49,7 +58,7 @@ class EmergenciesController < ApplicationController
   end
 
   def emergency
-    @emergency_code ||= Emergency.find(params[:id])
+    @emergency ||= Emergency.find_by(code: params[:code])
   end
 
   def emergency_params
