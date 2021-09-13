@@ -2,6 +2,7 @@ class Emergency < ActiveRecord::Base
   has_many :responders
 
   validates_uniqueness_of :code
+  validates :fire_severity, presence: true
 
   validates_numericality_of :fire_severity, 
     greater_than_or_equal_to: 0, 
