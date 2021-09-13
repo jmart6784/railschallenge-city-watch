@@ -17,9 +17,9 @@ class EmergenciesShowTest < ActionDispatch::IntegrationTest
     assert_equal 3, json_response['medical_severity']
   end
 
-  # test 'GET /emergencies/:code 404 response' do
-  #   get '/emergencies/non-existent-emergency-code'
+  test 'GET /api/v1/emergencies/:code 404 response' do
+    get '/api/v1/emergencies/non-existent-emergency-code'
 
-  #   assert_equal 404, response.status
-  # end
+    assert_equal 404, response.status
+  end
 end
