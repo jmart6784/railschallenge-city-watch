@@ -2,7 +2,10 @@ class EmergenciesController < ApplicationController
   def index
     emergencies = Emergency.all
 
-    render json: emergencies
+    resolved = 0
+    emergencies.each { |emergency|  resolved += 1 if !emergency.resolved_at.nil? }
+
+    render json: {emergencies: emergencies, full_response: [resolved, emergencies.count]}, status: 200
   end
 
   def create

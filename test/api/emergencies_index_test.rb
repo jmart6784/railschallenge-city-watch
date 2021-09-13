@@ -5,7 +5,7 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     get '/api/v1/emergencies/'
 
     assert_equal 200, response.status
-    assert_equal [], JSON.parse(body)
+    assert_equal [], JSON.parse(body)['emergencies']
   end
 
   test 'GET /api/v1/emergencies/ should return all emergencies when some emergencies exist' do
@@ -15,38 +15,39 @@ class EmergenciesIndexTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
 
     json_response = JSON.parse(body)
-    assert_equal(json_response[0]['code'], 'E-00000001')
-    assert_equal(json_response[0]['fire_severity'], 0)
-    assert_equal(json_response[0]['police_severity'], 1)
-    assert_equal(json_response[0]['medical_severity'], 2)
+    assert_equal(json_response['emergencies'][0]['code'], 'E-00000001')
+    assert_equal(json_response['emergencies'][0]['fire_severity'], 0)
+    assert_equal(json_response['emergencies'][0]['police_severity'], 1)
+    assert_equal(json_response['emergencies'][0]['medical_severity'], 2)
   end
 
-  # test 'GET /api/v1/emergencies/ includes the full_responses counts' do
-  #   setup_resolved_emergencies
+  test 'GET /api/v1/emergencies/ includes the full_responses counts' do
+    setup_resolved_emergencies
 
-  #   get '/api/v1/emergencies/'
-  #   assert_equal 200, response.status
+    get '/api/v1/emergencies/'
+    assert_equal 200, response.status
 
-  #   json_response = JSON.parse(body)
-  #   assert_equal([1, 3], json_response['full_responses'])
-  #   # ...where [1, 3] are NOT database ids, if that's what you're expecting.
-  #   #
-  #   # 1 = the number of `full_response` emergencies in the system
-  #   # 3 = the total number of emergencies in the system
-  #   #
-  #   # see `setup_resolved_emergencies`
-  # end
+    json_response = JSON.parse(body)
 
-  # def setup_resolved_emergencies
-  #   post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-100', capacity: 1 }
-  #   patch '/api/v1/responders/F-100', responder: { on_duty: true }
+    assert_equal([1, 3], json_response['full_response'])
+    # ...where [1, 3] are NOT database ids, if that's what you're expecting.
+    #
+    # 1 = the number of `full_response` emergencies in the system
+    # 3 = the total number of emergencies in the system
+    #
+    # see `setup_resolved_emergencies`
+  end
 
-  #   post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 1, police_severity: 0, medical_severity: 0 }
-  #   post '/api/v1/emergencies/', emergency: { code: 'E-00000002', fire_severity: 2, police_severity: 0, medical_severity: 0 }
-  #   post '/api/v1/emergencies/', emergency: { code: 'E-00000003', fire_severity: 3, police_severity: 0, medical_severity: 0 }
+  def setup_resolved_emergencies
+    post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-100', capacity: 1 }
+    put '/api/v1/responders/F-100', responder: { on_duty: true }
 
-  #   patch '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now } # the only full-response emergency
-  #   patch '/api/v1/emergencies/E-00000002', emergency: { resolved_at: Time.zone.now }
-  #   patch '/api/v1/emergencies/E-00000003', emergency: { resolved_at: Time.zone.now }
-  # end
+    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 1, police_severity: 0, medical_severity: 0 }
+    post '/api/v1/emergencies/', emergency: { code: 'E-00000002', fire_severity: 2, police_severity: 0, medical_severity: 0 }
+    post '/api/v1/emergencies/', emergency: { code: 'E-00000003', fire_severity: 3, police_severity: 0, medical_severity: 0 }
+
+    put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now } # the only full-response emergency
+    put '/api/v1/emergencies/E-00000002', emergency: { resolved_at: nil }
+    put '/api/v1/emergencies/E-00000003', emergency: { resolved_at: nil }
+  end
 end
