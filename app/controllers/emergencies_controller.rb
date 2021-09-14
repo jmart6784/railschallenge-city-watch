@@ -123,6 +123,8 @@ class EmergenciesController < ApplicationController
       department_units = 0
 
       Responder.where(type: department, on_duty: true).each do |responder|
+        responder[:emergency_code] = emergency[:code]
+        responder.save
         if department_units >= emergency["#{department.downcase}_severity"]
           department_units += responder.capacity
           department_response << responder
@@ -134,6 +136,8 @@ class EmergenciesController < ApplicationController
       end
     else
       department_units = department_response[0].capacity
+      department_response[0][:emergency_code] = emergency[:code]
+      department_response[0].save
     end
 
     full_response = false

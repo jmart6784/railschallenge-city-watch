@@ -64,8 +64,11 @@ class RespondersController < ApplicationController
     department_capacity = []
 
     Responder.where(type: department, on_duty: true).each do |responder|
+      next unless responder.emergency_code.nil?
       department_capacity << responder.capacity
     end
+
+    department_capacity << 0 if department_capacity.length === 0
 
     return department_capacity
   end
