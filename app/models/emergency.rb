@@ -2,6 +2,7 @@ class Emergency < ActiveRecord::Base
   has_many :responders
 
   validates_uniqueness_of :code
+  validates :code, presence: true
   validates :fire_severity, presence: true
   validates :police_severity, presence: true
   validates :medical_severity, presence: true

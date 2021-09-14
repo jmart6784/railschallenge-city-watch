@@ -8,10 +8,10 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
 
     assert_equal 201, response.status
     assert_nil body['message']
-    assert_equal 'E-99999999', json_response['code']
-    assert_equal 1, json_response['fire_severity']
-    assert_equal 2, json_response['police_severity']
-    assert_equal 3, json_response['medical_severity']
+    assert_equal 'E-99999999', json_response['emergency']['code']
+    assert_equal 1, json_response['emergency']['fire_severity']
+    assert_equal 2, json_response['emergency']['police_severity']
+    assert_equal 3, json_response['emergency']['medical_severity']
   end
 
   test 'POST /api/v1/emergencies/ all severities must be greater than or equal to zero' do
@@ -33,12 +33,17 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
 
     assert_equal 201, response.status
     assert_nil(json_response['message'])
-    assert_equal('E-not-unique', json_response['code'])
-    assert_equal(1, json_response['fire_severity'])
-    assert_equal(3, json_response['police_severity'])
-    assert_equal(5, json_response['medical_severity'])
+    assert_equal('E-not-unique', json_response['emergency']['code'])
+    assert_equal(1, json_response['emergency']['fire_severity'])
+    assert_equal(3, json_response['emergency']['police_severity'])
+    assert_equal(5, json_response['emergency']['medical_severity'])
 
-    post '/api/v1/emergencies', emergency: { code: 'E-not-unique', fire_severity: 1, police_severity: 3, medical_severity: 5 }
+    post '/api/v1/emergencies', emergency: {
+      code: 'E-not-unique', 
+      fire_severity: 1, 
+      police_severity: 3, 
+      medical_severity: 5 
+    }
 
     assert_equal 422, response.status
     assert_equal({ 'code' => ['has already been taken'] }, JSON.parse(body))
@@ -107,11 +112,15 @@ class EmergenciesCreateTest < ActionDispatch::IntegrationTest
     assert_equal 422, response.status
     assert_equal(
       {
-        'message' => {
-          'code' => ['can\'t be blank'],
-          'police_severity' => ['can\'t be blank', 'is not a number'],
-          'medical_severity' => ['can\'t be blank', 'is not a number']
-        }
+        'code' => ['can\'t be blank'],
+        'police_severity' => [
+          "can't be blank",     
+          'must be greater than or equal to 0'
+        ],
+        'medical_severity' => [
+          "can't be blank",
+          'must be greater than or equal to 0'
+        ]
       },
       JSON.parse(body)
     )
