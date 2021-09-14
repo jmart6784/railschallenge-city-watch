@@ -50,16 +50,16 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
       }, JSON.parse(body)
     )
 
-    # put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now }
-    # get '/api/v1/responders/?show=capacity'
-    # assert_equal(
-    #   {
-    #     'capacity' => {
-    #       'Fire' => [3, 3, 2, 2],
-    #       'Police' => [7, 7, 3, 3],
-    #       'Medical' => [6, 6, 6, 6]
-    #     }
-    #   }, JSON.parse(body)
-    # )
+    put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now }
+    get '/api/v1/responders/?show=capacity'
+    assert_equal(
+      {
+        'capacity' => {
+          'Fire' => [2],
+          'Police' => [3],
+          'Medical' => [5, 1]
+        }
+      }, JSON.parse(body)
+    )
   end
 end

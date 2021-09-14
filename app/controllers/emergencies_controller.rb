@@ -63,6 +63,7 @@ class EmergenciesController < ApplicationController
       unpermitted_param_response("update")
     else
       emergency&.update(emergency_params)
+      resolve_emergency(emergency) if emergency[:resolved_at]
       return render json: emergency
     end
   end
@@ -80,6 +81,13 @@ class EmergenciesController < ApplicationController
   end
 
   private
+
+  def resolve_emergency(emergency)
+    Responder.where(emergency_code: emergency[:code]).each do |responder|
+      responder[:emergency_code] = nil
+      responder.save
+    end
+  end
 
   def forbidden_param?(action)
     if action === "create"
