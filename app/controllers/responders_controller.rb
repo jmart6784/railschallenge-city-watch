@@ -8,6 +8,13 @@ class RespondersController < ApplicationController
           Medical: get_capacity("Medical") 
         }
       }, status: 200
+    elsif (
+      params[:show].downcase === "fire" || 
+      params[:show].downcase === "police" || 
+      params[:show].downcase === "medical"
+    )
+      responders = Responder.where(type: params[:show])
+      render json: responders, status: 200
     else
       responders = Responder.all
 

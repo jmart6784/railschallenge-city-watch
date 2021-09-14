@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'json'
 
 class RespondersCapacityTest < ActionDispatch::IntegrationTest
   def setup
@@ -61,5 +62,28 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
         }
       }, JSON.parse(body)
     )
+  end
+
+  test 'GET /api/v1/responders/?show=department show type of responders by department' do
+    get '/api/v1/responders/?show=Fire'
+
+    responder1 = Responder.find_by(name: "F-100")
+    responder2 = Responder.find_by(name: "F-101")
+
+    assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
+
+    get '/api/v1/responders/?show=Police'
+
+    responder1 = Responder.find_by(name: "P-100")
+    responder2 = Responder.find_by(name: "P-101")
+
+    assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
+
+    get '/api/v1/responders/?show=Medical'
+
+    responder1 = Responder.find_by(name: "M-100")
+    responder2 = Responder.find_by(name: "M-101")
+
+    assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
   end
 end
