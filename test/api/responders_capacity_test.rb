@@ -99,4 +99,17 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
       JSON.parse(body)
     )
   end
+
+  test 'GET /api/v1/responders/?show=total_on_duty get capacity all responders regardless if they are busy or not' do
+    get '/api/v1/responders/?show=total_on_duty'
+
+    assert_equal(
+      JSON.parse({
+        Fire: 2,
+        Police: 3,
+        Medical: 6
+      }.to_json), 
+      JSON.parse(body)
+    )
+  end
 end
