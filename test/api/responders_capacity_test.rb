@@ -86,4 +86,17 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
 
     assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
   end
+
+  test 'GET /api/v1/responders/?show=total_capacity shows responders by type and their capacity regardless of being on duty' do
+    get '/api/v1/responders/?show=total_capacity'
+
+    assert_equal(
+      JSON.parse({
+        Fire: 3,
+        Police: 7,
+        Medical: 6
+      }.to_json), 
+      JSON.parse(body)
+    )
+  end
 end

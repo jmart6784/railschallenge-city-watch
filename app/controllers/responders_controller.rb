@@ -15,6 +15,12 @@ class RespondersController < ApplicationController
     )
       responders = Responder.where(type: params[:show])
       render json: responders, status: 200
+    elsif params[:show] === "total_capacity"
+      render json: {
+        Fire: Responder.where(type: "Fire").sum(:capacity),
+        Police: Responder.where(type: "Police").sum(:capacity),
+        Medical: Responder.where(type: "Medical").sum(:capacity)
+      }, status: 200
     else
       responders = Responder.all
 
