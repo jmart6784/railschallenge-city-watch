@@ -115,11 +115,11 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
     refute json_response['full_response']
   end
 
-  # test 'POST /api/v1/emergencies/ will dispatch NO resources for an emergency with severities that are all zero' do
-  #   post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 0, medical_severity: 0 }
-  #   json_response = JSON.parse(body)
+  test 'POST /api/v1/emergencies/ will dispatch NO resources for an emergency with severities that are all zero' do
+    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 0, medical_severity: 0 }
+    json_response = JSON.parse(body)
 
-  #   assert_equal([], json_response['emergency']['responders'].sort)
-  #   assert json_response['emergency']['full_response']
-  # end
+    assert_equal([], json_response['responders'])
+    assert json_response['full_response']
+  end
 end

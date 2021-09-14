@@ -21,25 +21,37 @@ class EmergenciesController < ApplicationController
       unpermitted_param_response("create")
     else
       emergency = Emergency.new(emergency_params)
-      
-      fire_info = allocate_responders(emergency, "Fire")
-      police_info = allocate_responders(emergency, "Police")
-      medical_info = allocate_responders(emergency, "Medical")
-
-      all_responders = fire_info[:responders] + police_info[:responders] + medical_info[:responders]
-
-      full_response = true if (
-        fire_info[:full_response] && 
-        police_info[:full_response] && 
-        medical_info[:full_response]
-      )
 
       if emergency.save
-        render json: {
-          emergency: emergency, 
-          responders: all_responders,
-          full_response: full_response
-        }, status: 201
+        unless (
+          emergency.fire_severity === 0 && 
+          emergency.police_severity === 0 && 
+          emergency.medical_severity === 0
+        )
+          fire_info = allocate_responders(emergency, "Fire")
+          police_info = allocate_responders(emergency, "Police")
+          medical_info = allocate_responders(emergency, "Medical")
+    
+          all_responders = fire_info[:responders] + police_info[:responders] + medical_info[:responders]
+    
+          full_response = true if (
+            fire_info[:full_response] && 
+            police_info[:full_response] && 
+            medical_info[:full_response]
+          )
+
+          render json: {
+            emergency: emergency, 
+            responders: all_responders,
+            full_response: full_response
+          }, status: 201
+        else
+          render json: {
+            emergency: emergency, 
+            responders: [],
+            full_response: true
+          }, status: 201
+        end
       else
         render json: emergency.errors, status: 422
       end
