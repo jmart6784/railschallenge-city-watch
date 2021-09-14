@@ -23,7 +23,39 @@ class EmergenciesController < ApplicationController
       emergency = Emergency.new(emergency_params)
 
       if emergency.save
-        render json: emergency, status: 201
+        fire_response = Responder.where(
+          type: "Fire", 
+          on_duty: true, 
+          capacity: emergency.fire_severity
+        ).limit(1)
+
+        if fire_response[0].nil?
+          fire_response = []
+          fire_units = 0
+
+          Responder.where(type: "Fire", on_duty: true).each do |responder|
+            if fire_units >= emergency.fire_severity
+              fire_units += responder.capacity
+              fire_response << responder
+              break
+            else
+              fire_units += responder.capacity
+              fire_response << responder
+            end
+          end
+        else
+          fire_units = fire_response[0].capacity
+        end
+
+        full_response = false
+
+        full_response = true if fire_units >= emergency.fire_severity
+
+        render json: {
+          emergency: emergency, 
+          responders: fire_response,
+          full_response: full_response
+        }, status: 201
       else
         render json: emergency.errors, status: 422
       end
