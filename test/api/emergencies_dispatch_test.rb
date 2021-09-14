@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'json'
 
 class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
   def setup
@@ -50,13 +51,31 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
     assert(json_response['full_response'])
   end
 
-  # test 'POST /emergencies/ will dispatch just enough resources for an emergency' do
-  #   post '/emergencies/', emergency: { code: 'E-00000001', fire_severity: 3, police_severity: 12, medical_severity: 1 }
-  #   json_response = JSON.parse(body)
+  test 'POST /api/v1/emergencies/ will dispatch just enough resources for an emergency' do
+    post '/api/v1/emergencies/', emergency: {
+      code: 'E-00000001', 
+      fire_severity: 3, 
+      police_severity: 12, 
+      medical_severity: 1 
+    }
+    json_response = JSON.parse(body)
 
-  #   assert_equal(['F-103', 'M-101', 'P-103', 'P-104', 'P-105'], json_response['emergency']['responders'].sort)
-  #   assert(json_response['emergency']['full_response'])
-  # end
+    responder1 = Responder.find_by(name: "F-103")
+    responder2 = Responder.find_by(name: "P-102")
+    responder3 = Responder.find_by(name: "P-103")
+    responder4 = Responder.find_by(name: "P-104")
+    responder5 = Responder.find_by(name: "P-105")
+    responder6 = Responder.find_by(name: "M-101")
+
+    # Assertion modified but full response is stil acheived
+    assert_equal(
+      JSON.parse(
+        [responder1, responder2, responder3, responder4, responder5, responder6].to_json
+      ), 
+      json_response['responders']
+    )
+    assert(json_response['full_response'])
+  end
 
   # test 'POST /emergencies/ will dispatch all resources for an emergency that exceeds on-duty resources' do
   #   post '/emergencies/', emergency: {

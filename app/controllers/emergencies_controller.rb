@@ -21,39 +21,23 @@ class EmergenciesController < ApplicationController
       unpermitted_param_response("create")
     else
       emergency = Emergency.new(emergency_params)
+      
+      fire_info = allocate_responders(emergency, "Fire")
+      police_info = allocate_responders(emergency, "Police")
+      medical_info = allocate_responders(emergency, "Medical")
+
+      all_responders = fire_info[:responders] + police_info[:responders] + medical_info[:responders]
+
+      full_response = true if (
+        fire_info[:full_response] && 
+        police_info[:full_response] && 
+        medical_info[:full_response]
+      )
 
       if emergency.save
-        fire_response = Responder.where(
-          type: "Fire", 
-          on_duty: true, 
-          capacity: emergency.fire_severity
-        ).limit(1)
-
-        if fire_response[0].nil?
-          fire_response = []
-          fire_units = 0
-
-          Responder.where(type: "Fire", on_duty: true).each do |responder|
-            if fire_units >= emergency.fire_severity
-              fire_units += responder.capacity
-              fire_response << responder
-              break
-            else
-              fire_units += responder.capacity
-              fire_response << responder
-            end
-          end
-        else
-          fire_units = fire_response[0].capacity
-        end
-
-        full_response = false
-
-        full_response = true if fire_units >= emergency.fire_severity
-
         render json: {
           emergency: emergency, 
-          responders: fire_response,
+          responders: all_responders,
           full_response: full_response
         }, status: 201
       else
@@ -113,6 +97,38 @@ class EmergenciesController < ApplicationController
         render json: { :message => 'found unpermitted parameter: code' }, status: 422
       end      
     end
+  end
+
+  def allocate_responders(emergency, department)
+    department_response = Responder.where(
+      type: department, 
+      on_duty: true, 
+      capacity: emergency["#{department.downcase}_severity"]
+    ).limit(1)
+
+    if department_response[0].nil?
+      department_response = []
+      department_units = 0
+
+      Responder.where(type: department, on_duty: true).each do |responder|
+        if department_units >= emergency["#{department.downcase}_severity"]
+          department_units += responder.capacity
+          department_response << responder
+          break
+        else
+          department_units += responder.capacity
+          department_response << responder
+        end
+      end
+    else
+      department_units = department_response[0].capacity
+    end
+
+    full_response = false
+
+    full_response = true if department_units >= emergency["#{department.downcase}_severity"]
+
+    return {responders: department_response, full_response: full_response}
   end
 
   def emergency
