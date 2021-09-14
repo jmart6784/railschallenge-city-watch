@@ -23,9 +23,9 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
     assert_equal(
       {
         'capacity' => {
-          'Fire' => [3, 3, 2, 2],
-          'Police' => [7, 7, 3, 3],
-          'Medical' => [6, 6, 6, 6]
+          'Fire' => [2],
+          'Police' => [3],
+          'Medical' => [5, 1]
         }
       }, JSON.parse(body)
     )

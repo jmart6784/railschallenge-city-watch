@@ -1,8 +1,18 @@
 class RespondersController < ApplicationController
   def index
-    responders = Responder.all
+    if params[:show] === "capacity"
+      render json: {
+        capacity: {
+          Fire: get_capacity("Fire"),
+          Police: get_capacity("Police"),
+          Medical: get_capacity("Medical") 
+        }
+      }, status: 200
+    else
+      responders = Responder.all
 
-    render json: responders, status: 200
+      render json: responders, status: 200
+    end
   end
 
   def show
@@ -49,6 +59,16 @@ class RespondersController < ApplicationController
   end
 
   private
+
+  def get_capacity(department)
+    department_capacity = []
+
+    Responder.where(type: department, on_duty: true).each do |responder|
+      department_capacity << responder.capacity
+    end
+
+    return department_capacity
+  end
 
   def forbidden_param?(action)
     if action === "create"
