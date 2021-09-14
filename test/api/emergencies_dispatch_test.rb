@@ -77,22 +77,46 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
     assert(json_response['full_response'])
   end
 
-  # test 'POST /emergencies/ will dispatch all resources for an emergency that exceeds on-duty resources' do
-  #   post '/emergencies/', emergency: {
-  #     code: 'E-00000001', fire_severity: 99, police_severity: 99, medical_severity: 99
-  #   }
+  test 'POST /api/v1/emergencies/ will dispatch all resources for an emergency that exceeds on-duty resources' do
+    post '/api/v1/emergencies/', emergency: {
+      code: 'E-00000001', fire_severity: 99, police_severity: 99, medical_severity: 99
+    }
 
-  #   json_response = JSON.parse(body)
+    json_response = JSON.parse(body)
 
-  #   assert_equal(
-  #     ['F-101', 'F-103', 'F-104', 'M-101', 'M-102', 'M-103', 'P-102', 'P-103', 'P-104', 'P-105'],
-  #     json_response['emergency']['responders'].sort
-  #   )
-  #   refute json_response['emergency']['full_response']
-  # end
+    unit1 = Responder.find_by(name: 'F-101')
+    unit2 = Responder.find_by(name: 'F-103')
+    unit3 = Responder.find_by(name: 'F-104')
+    unit4 = Responder.find_by(name: 'P-102')
+    unit5 = Responder.find_by(name: 'P-103')
+    unit6 = Responder.find_by(name: 'P-104')
+    unit7 = Responder.find_by(name: 'P-105')
+    unit8 = Responder.find_by(name: 'M-101')
+    unit9 = Responder.find_by(name: 'M-102')
+    unit10 = Responder.find_by(name: 'M-103')
 
-  # test 'POST /emergencies/ will dispatch NO resources for an emergency with severities that are all zero' do
-  #   post '/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 0, medical_severity: 0 }
+    assert_equal(
+      JSON.parse(
+        [
+          unit1, 
+          unit2, 
+          unit3, 
+          unit4, 
+          unit5, 
+          unit6, 
+          unit7, 
+          unit8, 
+          unit9, 
+          unit10
+        ].to_json
+      ),
+      json_response['responders']
+    )
+    refute json_response['full_response']
+  end
+
+  # test 'POST /api/v1/emergencies/ will dispatch NO resources for an emergency with severities that are all zero' do
+  #   post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 0, medical_severity: 0 }
   #   json_response = JSON.parse(body)
 
   #   assert_equal([], json_response['emergency']['responders'].sort)
