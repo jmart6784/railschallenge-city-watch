@@ -100,7 +100,7 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test 'GET /api/v1/responders/?show=total_on_duty get capacity all responders regardless if they are busy or not' do
+  test 'GET /api/v1/responders/?show=total_on_duty get capacity all responders that are on duty regardless if they are busy or not' do
     get '/api/v1/responders/?show=total_on_duty'
 
     assert_equal(
