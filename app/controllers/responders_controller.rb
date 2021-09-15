@@ -27,6 +27,24 @@ class RespondersController < ApplicationController
         Police: Responder.where(type: "Police", on_duty: true).sum(:capacity),
         Medical: Responder.where(type: "Medical", on_duty: true).sum(:capacity)
       }, status: 200
+    elsif params[:show] === "total_ready"
+      render json: {
+        Fire: Responder.where(
+          emergency_code: nil, 
+          type: "Fire", 
+          on_duty: true
+        ).sum(:capacity),
+        Police: Responder.where(
+          emergency_code: nil, 
+          type: "Police", 
+          on_duty: true
+        ).sum(:capacity),
+        Medical: Responder.where(
+          emergency_code: nil, 
+          type: "Medical", 
+          on_duty: true
+        ).sum(:capacity)
+      }, status: 200
     else
       responders = Responder.all
 
