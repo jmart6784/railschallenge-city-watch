@@ -4,7 +4,12 @@ class EmergenciesUpdateTest < ActionDispatch::IntegrationTest
   def setup
     super
 
-    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 1, police_severity: 1, medical_severity: 1 }
+    post '/api/v1/emergencies/', emergency: { 
+      code: 'E-00000001', 
+      fire_severity: 1, 
+      police_severity: 1, 
+      medical_severity: 1 
+    }
   end
 
   test 'PATCH /api/v1/emergencies/:code can change fire_severity' do

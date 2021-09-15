@@ -1,11 +1,17 @@
 class EmergenciesController < ApplicationController
   def index
-    emergencies = Emergency.all
+    if params[:report] === "all"
 
-    resolved = 0
-    emergencies.each { |emergency|  resolved += 1 if !emergency.resolved_at.nil? }
 
-    render json: {emergencies: emergencies, full_response: [resolved, emergencies.count]}, status: 200
+      render json: {}, status: 200
+    else
+      emergencies = Emergency.all
+
+      resolved = 0
+      emergencies.each { |emergency|  resolved += 1 if !emergency.resolved_at.nil? }
+  
+      render json: {emergencies: emergencies, full_response: [resolved, emergencies.count]}, status: 200
+    end
   end
 
   def show
@@ -46,6 +52,8 @@ class EmergenciesController < ApplicationController
             full_response: full_response
           }, status: 201
         else
+          emergency[:resolved_at] = Time.zone.now
+          emergency.save
           render json: {
             emergency: emergency, 
             responders: [],
@@ -126,13 +134,22 @@ class EmergenciesController < ApplicationController
       capacity: emergency["#{department.downcase}_severity"]
     ).limit(1)
 
+    # Sets department responder as nil if it is already busy
+    department_response[0] = nil if (
+      !department_response[0].nil? && 
+      !department_response[0][:emergency_code].nil?
+    )
+
     if department_response[0].nil?
       department_response = []
       department_units = 0
 
       Responder.where(type: department, on_duty: true).each do |responder|
+        next unless responder[:emergency_code].nil?
+
         responder[:emergency_code] = emergency[:code]
         responder.save
+
         if department_units >= emergency["#{department.downcase}_severity"]
           department_units += responder.capacity
           department_response << responder

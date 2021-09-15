@@ -9,9 +9,9 @@ class RespondersController < ApplicationController
         }
       }, status: 200
     elsif (
-      params[:show].downcase === "fire" || 
-      params[:show].downcase === "police" || 
-      params[:show].downcase === "medical"
+      params[:show] === "Fire" || 
+      params[:show] === "Police" || 
+      params[:show] === "Medical"
     )
       responders = Responder.where(type: params[:show])
       render json: responders, status: 200

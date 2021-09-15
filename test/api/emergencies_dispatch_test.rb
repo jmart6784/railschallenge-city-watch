@@ -44,7 +44,12 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /api/v1/emergencies/ will dispatch just one responder, if that responder can handle the emergency completely' do
-    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 3, police_severity: 0, medical_severity: 0 }
+    post '/api/v1/emergencies/', emergency: { 
+      code: 'E-00000001', 
+      fire_severity: 3, 
+      police_severity: 0, 
+      medical_severity: 0 
+    }
     json_response = JSON.parse(body)
 
     assert_equal('F-103', json_response['responders'][0]['name'])
@@ -79,7 +84,10 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
 
   test 'POST /api/v1/emergencies/ will dispatch all resources for an emergency that exceeds on-duty resources' do
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000001', fire_severity: 99, police_severity: 99, medical_severity: 99
+      code: 'E-00000001', 
+      fire_severity: 99, 
+      police_severity: 99, 
+      medical_severity: 99
     }
 
     json_response = JSON.parse(body)
@@ -116,7 +124,12 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /api/v1/emergencies/ will dispatch NO resources for an emergency with severities that are all zero' do
-    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 0, police_severity: 0, medical_severity: 0 }
+    post '/api/v1/emergencies/', emergency: {
+      code: 'E-00000001', 
+      fire_severity: 0,
+       police_severity: 0,
+        medical_severity: 0 
+    }
     json_response = JSON.parse(body)
 
     assert_equal([], json_response['responders'])
