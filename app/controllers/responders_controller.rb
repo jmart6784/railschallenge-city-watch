@@ -1,47 +1,43 @@
 class RespondersController < ApplicationController
   def index
-    if params[:show] === "capacity"
+    if params[:show] == 'capacity'
       render json: {
         capacity: {
-          Fire: get_capacity("Fire"),
-          Police: get_capacity("Police"),
-          Medical: get_capacity("Medical") 
+          Fire: get_capacity('Fire'),
+          Police: get_capacity('Police'),
+          Medical: get_capacity('Medical')
         }
       }, status: 200
-    elsif (
-      params[:show] === "Fire" || 
-      params[:show] === "Police" || 
-      params[:show] === "Medical"
-    )
+    elsif params[:show] == 'Fire' || params[:show] == 'Police' || params[:show] == 'Medical'
       responders = Responder.where(type: params[:show])
       render json: responders, status: 200
-    elsif params[:show] === "total_capacity"
+    elsif params[:show] == 'total_capacity'
       render json: {
-        Fire: Responder.where(type: "Fire").sum(:capacity),
-        Police: Responder.where(type: "Police").sum(:capacity),
-        Medical: Responder.where(type: "Medical").sum(:capacity)
+        Fire: Responder.where(type: 'Fire').sum(:capacity),
+        Police: Responder.where(type: 'Police').sum(:capacity),
+        Medical: Responder.where(type: 'Medical').sum(:capacity)
       }, status: 200
-    elsif params[:show] === "total_on_duty"
+    elsif params[:show] == 'total_on_duty'
       render json: {
-        Fire: Responder.where(type: "Fire", on_duty: true).sum(:capacity),
-        Police: Responder.where(type: "Police", on_duty: true).sum(:capacity),
-        Medical: Responder.where(type: "Medical", on_duty: true).sum(:capacity)
+        Fire: Responder.where(type: 'Fire', on_duty: true).sum(:capacity),
+        Police: Responder.where(type: 'Police', on_duty: true).sum(:capacity),
+        Medical: Responder.where(type: 'Medical', on_duty: true).sum(:capacity)
       }, status: 200
-    elsif params[:show] === "total_ready"
+    elsif params[:show] == 'total_ready'
       render json: {
         Fire: Responder.where(
-          emergency_code: nil, 
-          type: "Fire", 
+          emergency_code: nil,
+          type: 'Fire',
           on_duty: true
         ).sum(:capacity),
         Police: Responder.where(
-          emergency_code: nil, 
-          type: "Police", 
+          emergency_code: nil,
+          type: 'Police',
           on_duty: true
         ).sum(:capacity),
         Medical: Responder.where(
-          emergency_code: nil, 
-          type: "Medical", 
+          emergency_code: nil,
+          type: 'Medical',
           on_duty: true
         ).sum(:capacity)
       }, status: 200
@@ -56,13 +52,13 @@ class RespondersController < ApplicationController
     if responder
       render json: responder
     else
-      render json: { :message => "responder doesn't exist" }, status: 404
+      render json: { message: "responder doesn't exist" }, status: 404
     end
   end
 
   def create
-    if forbidden_param?("create") || !responder_params[:emergency_code].nil?
-      unpermitted_param_response("create")
+    if forbidden_param?('create') || !responder_params[:emergency_code].nil?
+      unpermitted_param_response('create')
     else
       responder = Responder.new(responder_params)
 
@@ -75,24 +71,24 @@ class RespondersController < ApplicationController
   end
 
   def update
-    if forbidden_param?("update")
-      unpermitted_param_response("update")
+    if forbidden_param?('update')
+      unpermitted_param_response('update')
     else
       responder&.update(responder_params)
-      return render json: {message: 'Responder edited!'}
+      return render json: { message: 'Responder edited!' }
     end
   end
 
   def new
-    render json: { :message => 'page not found' }, status: 404
+    render json: { message: 'page not found' }, status: 404
   end
 
   def edit
-    render json: { :message => 'page not found' }, status: 404
+    render json: { message: 'page not found' }, status: 404
   end
 
   def destroy
-    render json: { :message => 'page not found' }, status: 404
+    render json: { message: 'page not found' }, status: 404
   end
 
   private
@@ -105,50 +101,50 @@ class RespondersController < ApplicationController
       department_capacity << responder.capacity
     end
 
-    department_capacity << 0 if department_capacity.length === 0
+    department_capacity << 0 if department_capacity.length == 0
 
-    return department_capacity
+    department_capacity
   end
 
   def forbidden_param?(action)
-    if action === "create"
-      true if (
-        responder_params[:emergency_code] || 
-        responder_params[:id] || 
+    if action == 'create'
+      true if
+        responder_params[:emergency_code] ||
+        responder_params[:id] ||
         responder_params[:on_duty]
-      )
-    elsif action === "update"
-      true if (
-        responder_params[:emergency_code] || 
-        responder_params[:id] || 
+
+    elsif action == 'update'
+      true if
+        responder_params[:emergency_code] ||
+        responder_params[:id] ||
         responder_params[:type] ||
-        responder_params[:name] || 
+        responder_params[:name] ||
         responder_params[:capacity]
-      )
+
     end
   end
 
   def unpermitted_param_response(action)
-    if action === "create"
+    if action == 'create'
       if responder_params[:emergency_code]
-        render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+        render json: { message: 'found unpermitted parameter: emergency_code' }, status: 422
       elsif responder_params[:id]
-        render json: { :message => 'found unpermitted parameter: id' }, status: 422
+        render json: { message: 'found unpermitted parameter: id' }, status: 422
       elsif responder_params[:on_duty]
-        render json: { :message => 'found unpermitted parameter: on_duty' }, status: 422
-      end   
-    elsif action === "update"
+        render json: { message: 'found unpermitted parameter: on_duty' }, status: 422
+      end
+    elsif action == 'update'
       if responder_params[:emergency_code]
-        render json: { :message => 'found unpermitted parameter: emergency_code' }, status: 422
+        render json: { message: 'found unpermitted parameter: emergency_code' }, status: 422
       elsif responder_params[:id]
-        render json: { :message => 'found unpermitted parameter: id' }, status: 422
+        render json: { message: 'found unpermitted parameter: id' }, status: 422
       elsif responder_params[:type]
-        render json: { :message => 'found unpermitted parameter: type' }, status: 422
+        render json: { message: 'found unpermitted parameter: type' }, status: 422
       elsif responder_params[:name]
-        render json: { :message => 'found unpermitted parameter: name' }, status: 422
+        render json: { message: 'found unpermitted parameter: name' }, status: 422
       elsif responder_params[:capacity]
-        render json: { :message => 'found unpermitted parameter: capacity' }, status: 422
-      end      
+        render json: { message: 'found unpermitted parameter: capacity' }, status: 422
+      end
     end
   end
 

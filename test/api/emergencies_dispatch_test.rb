@@ -44,11 +44,11 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
   end
 
   test 'POST /api/v1/emergencies/ will dispatch just one responder, if that responder can handle the emergency completely' do
-    post '/api/v1/emergencies/', emergency: { 
-      code: 'E-00000001', 
-      fire_severity: 3, 
-      police_severity: 0, 
-      medical_severity: 0 
+    post '/api/v1/emergencies/', emergency: {
+      code: 'E-00000001',
+      fire_severity: 3,
+      police_severity: 0,
+      medical_severity: 0
     }
     json_response = JSON.parse(body)
 
@@ -58,25 +58,25 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
 
   test 'POST /api/v1/emergencies/ will dispatch just enough resources for an emergency' do
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000001', 
-      fire_severity: 3, 
-      police_severity: 12, 
-      medical_severity: 1 
+      code: 'E-00000001',
+      fire_severity: 3,
+      police_severity: 12,
+      medical_severity: 1
     }
     json_response = JSON.parse(body)
 
-    responder1 = Responder.find_by(name: "F-103")
-    responder2 = Responder.find_by(name: "P-102")
-    responder3 = Responder.find_by(name: "P-103")
-    responder4 = Responder.find_by(name: "P-104")
-    responder5 = Responder.find_by(name: "P-105")
-    responder6 = Responder.find_by(name: "M-101")
+    responder1 = Responder.find_by(name: 'F-103')
+    responder2 = Responder.find_by(name: 'P-102')
+    responder3 = Responder.find_by(name: 'P-103')
+    responder4 = Responder.find_by(name: 'P-104')
+    responder5 = Responder.find_by(name: 'P-105')
+    responder6 = Responder.find_by(name: 'M-101')
 
     # Assertion modified but full response is stil acheived
     assert_equal(
       JSON.parse(
         [responder1, responder2, responder3, responder4, responder5, responder6].to_json
-      ), 
+      ),
       json_response['responders']
     )
     assert(json_response['full_response'])
@@ -84,9 +84,9 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
 
   test 'POST /api/v1/emergencies/ will dispatch all resources for an emergency that exceeds on-duty resources' do
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000001', 
-      fire_severity: 99, 
-      police_severity: 99, 
+      code: 'E-00000001',
+      fire_severity: 99,
+      police_severity: 99,
       medical_severity: 99
     }
 
@@ -106,15 +106,15 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
     assert_equal(
       JSON.parse(
         [
-          unit1, 
-          unit2, 
-          unit3, 
-          unit4, 
-          unit5, 
-          unit6, 
-          unit7, 
-          unit8, 
-          unit9, 
+          unit1,
+          unit2,
+          unit3,
+          unit4,
+          unit5,
+          unit6,
+          unit7,
+          unit8,
+          unit9,
           unit10
         ].to_json
       ),
@@ -125,10 +125,10 @@ class EmergenciesDispatchTest < ActionDispatch::IntegrationTest
 
   test 'POST /api/v1/emergencies/ will dispatch NO resources for an emergency with severities that are all zero' do
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000001', 
+      code: 'E-00000001',
       fire_severity: 0,
-       police_severity: 0,
-        medical_severity: 0 
+      police_severity: 0,
+      medical_severity: 0
     }
     json_response = JSON.parse(body)
 

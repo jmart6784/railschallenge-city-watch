@@ -8,7 +8,7 @@ class RespondersUpdateTest < ActionDispatch::IntegrationTest
   end
 
   test 'PATCH /api/v1/responders/:name can change on_duty' do
-    put '/api/v1/responders/F-100', responder: {on_duty: false}
+    put '/api/v1/responders/F-100', responder: { on_duty: false }
     responder = Responder.find_by(name: 'F-100')
     assert_equal(false, responder.on_duty)
 

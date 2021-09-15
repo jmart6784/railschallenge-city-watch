@@ -50,27 +50,27 @@ class ScoreReportTest < ActionDispatch::IntegrationTest
 
   test 'GET /api/v1/emergencies/?report=all Get statistics of all emergencies that were resolved' do
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000001', 
-      fire_severity: 1, 
-      police_severity: 1, 
+      code: 'E-00000001',
+      fire_severity: 1,
+      police_severity: 1,
       medical_severity: 1
     }
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000002', 
-      fire_severity: 1, 
-      police_severity: 1, 
+      code: 'E-00000002',
+      fire_severity: 1,
+      police_severity: 1,
       medical_severity: 1
     }
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000003', 
-      fire_severity: 1, 
-      police_severity: 1, 
+      code: 'E-00000003',
+      fire_severity: 1,
+      police_severity: 1,
       medical_severity: 1
     }
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000004', 
-      fire_severity: 99, 
-      police_severity: 99, 
+      code: 'E-00000004',
+      fire_severity: 99,
+      police_severity: 99,
       medical_severity: 99
     }
 
@@ -81,7 +81,11 @@ class ScoreReportTest < ActionDispatch::IntegrationTest
     get '/api/v1/emergencies/?report=all'
 
     assert_equal 200, response.status
-    assert_equal "3/4", JSON.parse(body)['score']
-    assert_equal "3/4 emergencies had sufficient responders to handle them, 1 emergency did not receive sufficient responders.", JSON.parse(body)['statement']
+    assert_equal '3/4', JSON.parse(body)['score']
+    assert_equal(
+      '3/4 emergencies had sufficient responders to' \
+      ' handle them, 1 emergency did not receive sufficient responders.',
+      JSON.parse(body)['statement']
+    )
   end
 end

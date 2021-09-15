@@ -34,10 +34,10 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
 
   test 'GET /api/v1/responders/?show=capacity increases and decreases as emergencies are created and resolved' do
     post '/api/v1/emergencies/', emergency: {
-      code: 'E-00000001', 
-      fire_severity: 1, 
-      police_severity: 7, 
-      medical_severity: 1 
+      code: 'E-00000001',
+      fire_severity: 1,
+      police_severity: 7,
+      medical_severity: 1
     }
 
     get '/api/v1/responders/?show=capacity'
@@ -67,22 +67,22 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
   test 'GET /api/v1/responders/?show=department show type of responders by department' do
     get '/api/v1/responders/?show=Fire'
 
-    responder1 = Responder.find_by(name: "F-100")
-    responder2 = Responder.find_by(name: "F-101")
+    responder1 = Responder.find_by(name: 'F-100')
+    responder2 = Responder.find_by(name: 'F-101')
 
     assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
 
     get '/api/v1/responders/?show=Police'
 
-    responder1 = Responder.find_by(name: "P-100")
-    responder2 = Responder.find_by(name: "P-101")
+    responder1 = Responder.find_by(name: 'P-100')
+    responder2 = Responder.find_by(name: 'P-101')
 
     assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
 
     get '/api/v1/responders/?show=Medical'
 
-    responder1 = Responder.find_by(name: "M-100")
-    responder2 = Responder.find_by(name: "M-101")
+    responder1 = Responder.find_by(name: 'M-100')
+    responder2 = Responder.find_by(name: 'M-101')
 
     assert_equal(JSON.parse([responder1, responder2].to_json), JSON.parse(body))
   end
@@ -95,7 +95,7 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
         Fire: 3,
         Police: 7,
         Medical: 6
-      }.to_json), 
+      }.to_json),
       JSON.parse(body)
     )
   end
@@ -108,7 +108,7 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
         Fire: 2,
         Police: 3,
         Medical: 6
-      }.to_json), 
+      }.to_json),
       JSON.parse(body)
     )
   end
@@ -121,7 +121,7 @@ class RespondersCapacityTest < ActionDispatch::IntegrationTest
         Fire: 2,
         Police: 3,
         Medical: 6
-      }.to_json), 
+      }.to_json),
       JSON.parse(body)
     )
   end

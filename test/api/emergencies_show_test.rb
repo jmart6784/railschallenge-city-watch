@@ -4,7 +4,12 @@ class EmergenciesShowTest < ActionDispatch::IntegrationTest
   def setup
     super
 
-    post '/api/v1/emergencies/', emergency: { code: 'E-00000001', fire_severity: 1, police_severity: 2, medical_severity: 3 }
+    post '/api/v1/emergencies/', emergency: {
+      code: 'E-00000001',
+      fire_severity: 1,
+      police_severity: 2,
+      medical_severity: 3
+    }
   end
 
   test 'GET /api/v1/emergencies/:code simple get by code' do

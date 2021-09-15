@@ -17,7 +17,7 @@ Rails.application.routes.draw do
       scope '/emergencies' do
         get '/' => 'emergencies#index'
         post '/' => 'emergencies#create'
-        get '/new' => "emergencies#new"
+        get '/new' => 'emergencies#new'
 
         scope '/:code' do
           get '/' => 'emergencies#show'

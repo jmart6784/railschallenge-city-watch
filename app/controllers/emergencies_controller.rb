@@ -1,20 +1,20 @@
 class EmergenciesController < ApplicationController
   def index
-    if params[:report] === "all"
+    if params[:report] == 'all'
       resolved = Emergency.where.not(resolved_at: nil)
       unresolved = Emergency.where(resolved_at: nil)
 
       render json: {
         score: "#{resolved.count}/#{Emergency.all.count}",
-        statement: "#{resolved.count}/#{Emergency.all.count} emergencies had sufficient responders to handle them, #{unresolved.count} #{"emergency".pluralize(unresolved.count)} did not receive sufficient responders."
+        statement: "#{resolved.count}/#{Emergency.all.count} emergencies had sufficient responders to handle them, #{unresolved.count} #{'emergency'.pluralize(unresolved.count)} did not receive sufficient responders."
       }, status: 200
     else
       emergencies = Emergency.all
 
       resolved = 0
-      emergencies.each { |emergency|  resolved += 1 if !emergency.resolved_at.nil? }
-  
-      render json: {emergencies: emergencies, full_response: [resolved, emergencies.count]}, status: 200
+      emergencies.each { |emergency|  resolved += 1 unless emergency.resolved_at.nil? }
+
+      render json: { emergencies: emergencies, full_response: [resolved, emergencies.count] }, status: 200
     end
   end
 
@@ -22,36 +22,35 @@ class EmergenciesController < ApplicationController
     if emergency
       render json: emergency
     else
-      render json: { :message => "emergency doesn't exist" }, status: 404
+      render json: { message: "emergency doesn't exist" }, status: 404
     end
   end
 
   def create
-    if forbidden_param?("create")
-      unpermitted_param_response("create")
+    if forbidden_param?('create')
+      unpermitted_param_response('create')
     else
       emergency = Emergency.new(emergency_params)
 
       if emergency.save
-        unless (
-          emergency.fire_severity === 0 && 
-          emergency.police_severity === 0 && 
-          emergency.medical_severity === 0
-        )
-          fire_info = allocate_responders(emergency, "Fire")
-          police_info = allocate_responders(emergency, "Police")
-          medical_info = allocate_responders(emergency, "Medical")
-    
+        unless
+          emergency.fire_severity == 0 &&
+          emergency.police_severity == 0 &&
+          emergency.medical_severity == 0
+
+          fire_info = allocate_responders(emergency, 'Fire')
+          police_info = allocate_responders(emergency, 'Police')
+          medical_info = allocate_responders(emergency, 'Medical')
+
           all_responders = fire_info[:responders] + police_info[:responders] + medical_info[:responders]
-    
-          full_response = true if (
-            fire_info[:full_response] && 
-            police_info[:full_response] && 
+
+          full_response = true if
+            fire_info[:full_response] &&
+            police_info[:full_response] &&
             medical_info[:full_response]
-          )
 
           render json: {
-            emergency: emergency, 
+            emergency: emergency,
             responders: all_responders,
             full_response: full_response
           }, status: 201
@@ -59,7 +58,7 @@ class EmergenciesController < ApplicationController
           emergency[:resolved_at] = Time.zone.now
           emergency.save
           render json: {
-            emergency: emergency, 
+            emergency: emergency,
             responders: [],
             full_response: true
           }, status: 201
@@ -71,8 +70,8 @@ class EmergenciesController < ApplicationController
   end
 
   def update
-    if forbidden_param?("update")
-      unpermitted_param_response("update")
+    if forbidden_param?('update')
+      unpermitted_param_response('update')
     else
       emergency&.update(emergency_params)
       resolve_emergency(emergency) if emergency[:resolved_at]
@@ -81,15 +80,15 @@ class EmergenciesController < ApplicationController
   end
 
   def new
-    render json: { :message => 'page not found' }, status: 404
+    render json: { message: 'page not found' }, status: 404
   end
 
   def edit
-    render json: { :message => 'page not found' }, status: 404
+    render json: { message: 'page not found' }, status: 404
   end
 
   def destroy
-    render json: { :message => 'page not found' }, status: 404
+    render json: { message: 'page not found' }, status: 404
   end
 
   private
@@ -102,47 +101,46 @@ class EmergenciesController < ApplicationController
   end
 
   def forbidden_param?(action)
-    if action === "create"
-      true if (
-        emergency_params[:id] || 
+    if action == 'create'
+      true if
+        emergency_params[:id] ||
         emergency_params[:resolved_at]
-      )
-    elsif action === "update"
-      true if (
-        emergency_params[:id] || 
+
+    elsif action == 'update'
+      true if
+        emergency_params[:id] ||
         emergency_params[:code]
-      )
+
     end
   end
 
   def unpermitted_param_response(action)
-    if action === "create"
+    if action == 'create'
       if emergency_params[:id]
-        render json: { :message => 'found unpermitted parameter: id' }, status: 422
+        render json: { message: 'found unpermitted parameter: id' }, status: 422
       elsif emergency_params[:resolved_at]
-        render json: { :message => 'found unpermitted parameter: resolved_at' }, status: 422
-      end   
-    elsif action === "update"
+        render json: { message: 'found unpermitted parameter: resolved_at' }, status: 422
+      end
+    elsif action == 'update'
       if emergency_params[:id]
-        render json: { :message => 'found unpermitted parameter: id' }, status: 422
+        render json: { message: 'found unpermitted parameter: id' }, status: 422
       elsif emergency_params[:code]
-        render json: { :message => 'found unpermitted parameter: code' }, status: 422
-      end      
+        render json: { message: 'found unpermitted parameter: code' }, status: 422
+      end
     end
   end
 
   def allocate_responders(emergency, department)
     department_response = Responder.where(
-      type: department, 
-      on_duty: true, 
+      type: department,
+      on_duty: true,
       capacity: emergency["#{department.downcase}_severity"]
     ).limit(1)
 
     # Sets department responder as nil if it is already busy
-    department_response[0] = nil if (
-      !department_response[0].nil? && 
+    department_response[0] = nil if
+      !department_response[0].nil? &&
       !department_response[0][:emergency_code].nil?
-    )
 
     if department_response[0].nil?
       department_response = []
@@ -173,7 +171,7 @@ class EmergenciesController < ApplicationController
 
     full_response = true if department_units >= emergency["#{department.downcase}_severity"]
 
-    return {responders: department_response, full_response: full_response}
+    { responders: department_response, full_response: full_response }
   end
 
   def emergency

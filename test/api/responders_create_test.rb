@@ -21,7 +21,7 @@ class RespondersCreateTest < ActionDispatch::IntegrationTest
   test 'POST /api/v1/responders/ capacity can be a number between 1..5' do
     post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-200', capacity: 0 }
     assert_equal 422, response.status
-    assert_equal({'capacity' => ['is not included in the list'] }, JSON.parse(body))
+    assert_equal({ 'capacity' => ['is not included in the list'] }, JSON.parse(body))
 
     post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-201', capacity: 1 }
     assert_equal 201, response.status
