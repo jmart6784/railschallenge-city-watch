@@ -1,9 +1,13 @@
 class EmergenciesController < ApplicationController
   def index
     if params[:report] === "all"
+      resolved = Emergency.where.not(resolved_at: nil)
+      unresolved = Emergency.where(resolved_at: nil)
 
-
-      render json: {}, status: 200
+      render json: {
+        score: "#{resolved.count}/#{Emergency.all.count}",
+        statement: "#{resolved.count}/#{Emergency.all.count} emergencies had sufficient responders to handle them, #{unresolved.count} #{"emergency".pluralize(unresolved.count)} did not receive sufficient responders."
+      }, status: 200
     else
       emergencies = Emergency.all
 

@@ -16,8 +16,10 @@ class ScoreReportTest < ActionDispatch::IntegrationTest
     post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-104', capacity: 4 }
     post '/api/v1/responders/', responder: { type: 'Fire', name: 'F-105', capacity: 5 }
     put '/api/v1/responders/F-101', responder: { on_duty: true }
+    put '/api/v1/responders/F-102', responder: { on_duty: true }
     put '/api/v1/responders/F-103', responder: { on_duty: true }
     put '/api/v1/responders/F-104', responder: { on_duty: true }
+    put '/api/v1/responders/F-105', responder: { on_duty: true }
   end
 
   def setup_police
@@ -26,6 +28,7 @@ class ScoreReportTest < ActionDispatch::IntegrationTest
     post '/api/v1/responders/', responder: { type: 'Police', name: 'P-103', capacity: 3 }
     post '/api/v1/responders/', responder: { type: 'Police', name: 'P-104', capacity: 4 }
     post '/api/v1/responders/', responder: { type: 'Police', name: 'P-105', capacity: 5 }
+    put '/api/v1/responders/P-101', responder: { on_duty: true }
     put '/api/v1/responders/P-102', responder: { on_duty: true }
     put '/api/v1/responders/P-103', responder: { on_duty: true }
     put '/api/v1/responders/P-104', responder: { on_duty: true }
@@ -41,9 +44,11 @@ class ScoreReportTest < ActionDispatch::IntegrationTest
     put '/api/v1/responders/M-101', responder: { on_duty: true }
     put '/api/v1/responders/M-102', responder: { on_duty: true }
     put '/api/v1/responders/M-103', responder: { on_duty: true }
+    put '/api/v1/responders/M-104', responder: { on_duty: true }
+    put '/api/v1/responders/M-105', responder: { on_duty: true }
   end
 
-  test 'GET /api/v1/emergencies/?report=all Get a percentage of all emergencies that were resolved' do
+  test 'GET /api/v1/emergencies/?report=all Get statistics of all emergencies that were resolved' do
     post '/api/v1/emergencies/', emergency: {
       code: 'E-00000001', 
       fire_severity: 1, 
@@ -68,10 +73,15 @@ class ScoreReportTest < ActionDispatch::IntegrationTest
       police_severity: 99, 
       medical_severity: 99
     }
+
+    put '/api/v1/emergencies/E-00000001', emergency: { resolved_at: Time.zone.now }
+    put '/api/v1/emergencies/E-00000002', emergency: { resolved_at: Time.zone.now }
+    put '/api/v1/emergencies/E-00000003', emergency: { resolved_at: Time.zone.now }
+
     get '/api/v1/emergencies/?report=all'
 
     assert_equal 200, response.status
-    assert_equal [], JSON.parse(body)['emergencies']
-    
+    assert_equal "3/4", JSON.parse(body)['score']
+    assert_equal "3/4 emergencies had sufficient responders to handle them, 1 emergency did not receive sufficient responders.", JSON.parse(body)['statement']
   end
 end
